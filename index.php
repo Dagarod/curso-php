@@ -1,117 +1,78 @@
 <?php
 
-$nombre = 'Daniel';
+const API_URL = "https://whenisthenextmcufilm.com/api";
 
-// Hola Mundo
-echo "Hola, PHP ".$nombre."\n";
+//Inicializar una nuva sesión de cURL; ch = cURL handle
+$ch = curl_init(API_URL);
 
-/*
-un comentario largo
+/* 
+Indicar que queremos recibir el resultado 
+de la peticion y no mostrarlo en pantalla
+porque php suele mostrarlo en pantalla
 */
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-$my_string = "Esto es un cadena de texto";
-echo $my_string . "\n";
-$my_string = "Aquí cambio el valor de mi texto \n";
-echo $my_string;
+/* 
+Ejecutar la partición
+y guardamos el resultado
+*/
+$result = curl_exec($ch);
 
-echo "Es tipo ".gettype($my_string) . "\n";
+// una alternativa sería utilizar file_get_contents
+// $result = file_get_content(API_URL); 
+// si sólo quieres hace un GET de una API
 
-$my_int = 6;
-echo gettype($my_int) . "\n";
+$data = json_decode($result, true);
 
-$my_float = 9.5;
-echo gettype($my_float) . "\n";
+curl_close($ch);
 
-echo $my_int + $my_float . "\n";
+//var_dump($data);
+?>
 
-$my_bool = true;
-echo "true = ".$my_bool . "\n";
-echo "my_bool = ".gettype($my_bool) . "\n";
+<head>
+    <meta charset="utf-8" />
+    <title>La próxima película de Marvel</title>
+    <meta name="description" content="La próxima película de Marvel" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Centered viewport -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.classless.min.css">
+</head>
+<main>
 
-echo "El valor de mi integer es $my_int y el de mi boolean es $my_bool.\n";
+    <section>
+        <h2>La próxima película de Marvel</h2>
+        <img src="<?= $data["poster_url"]; ?>" width=" 300" alt="Poster de <?= $data["title"] ?>"
+            style="border-radius: 16px" ; />
+    </section>
+    <hgroup>
+        <h3><?= $data["title"]; ?> se estrena en <?= $data["days_until"]; ?> días</h3>
+        <p>Fecha de estreno: <?= $data["release_date"]; ?></p>
+        <p>La siguiente es: <?= $data["following_production"]["title"]; ?></p>
+    </hgroup>
+</main>
 
-// Constantes
-
-const MY_CONSTANT = "Valor de la constante";
-echo MY_CONSTANT ."\n";
-
-// LISTAS
-
-$my_array = [$my_string,$my_float];
-echo gettype($my_array) . "\n";
-echo $my_array[0] . "\n";
-echo $my_array[1] . "\n";
-
-array_push($my_array, $my_bool);
-print_r($my_array) . "\n";
-
-// Diccionario
-// claves, no posiciones
-$my_dict = array("string" => $my_string, "int" => $my_int, "bool" => $my_bool);
-echo gettype($my_dict) . "\n";
-
-echo gettype($my_dict) . "\n";
-print_r($my_dict);
-echo $my_dict["int"] . "\n";
-
-// Set
-// en PHP no hay set, pero unique permite hacerlo
-
-array_push($my_array, "Dani");
-array_push($my_array, "Dani");
-print_r($my_array);
-print_r(array_unique($my_array));
-
-// Flujos de datos
-
-for ($index = 0; $index <= 10; $index++){
-    echo $index . "\n";
-}
-
-foreach($my_array as $my_item){
-    echo $my_item . "\n";
-}
-
-$index = 0;
-while ($index <= sizeof($my_array) -1){
-    echo $my_array[$index] . "\n";
-    $index++;
-}
-
-if($my_int == 11 && $my_string == "Hola"){
-    echo "El valor es 11\n";
-}else if($my_int == 12 || $my_string == "Hola"){
-    echo "El valor es 12 y dice HOLA\n";
-}else{
-    echo "El valor no es 11\n";
-}
-
-// Funciones
-
-function print_number(int $my_number){
-    echo "1 - 10" . "\n";
-    echo "2 - " . $my_number . "\n";
-}
-
-print_number(10.5);
-print_number(11);
-print_number(12);
-
-// Clases
-
-class MyClass {
-    public $name;
-    public $age;
-
-    function __construct($name,$age){
-        $this->name=$name;
-        $this->age=$age;
+<style>
+    :root {
+        color-scheme: light dark;
     }
-}
 
-$my_class = new MyClass("Dani",48);
-print_r($my_class);
-echo $my_class ->name . "\n";
-$my_class->name = "Dagarod";
-echo $my_class -> name . "\n";
-echo gettype($my_class) . "\n";
+    body {
+        display: grid;
+        place-content: center;
+    }
+
+    section {
+        display: flex;
+        justify-content: center;
+    }
+
+    img {
+        margin: 0 auto;
+    }
+
+    hgroup {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+</style>
