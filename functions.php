@@ -3,7 +3,12 @@
 // se activa a nivel de archivo y no de proyecto genérico
 declare(strict_types=1);
 
-const API_URL = "https://whenisthenextmcufilm.com/api";
+function render_template(string $template, array $data = [])
+{
+    // para extraer el valor del dato global
+    extract($data);
+    require "templates/$template.php";
+}
 
 function get_data($url): array
 {
@@ -22,4 +27,3 @@ function get_until_message(int $days): string
         default     => "$days hasta el estreno 📆",
     };
 }
-
