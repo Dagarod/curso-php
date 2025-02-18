@@ -15,7 +15,7 @@ class NextMovie
 
     public function get_until_message(): string
     {
-        $days = $this->$days_until;
+        $days = $this->days_until;
         return match (true) {
             $days === 0 => "Hoy se estrena! 🥳",
             $days === 1 => "Mañana se estrena 🚀",
